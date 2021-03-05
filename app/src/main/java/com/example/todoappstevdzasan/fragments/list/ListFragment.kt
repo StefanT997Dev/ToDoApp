@@ -5,8 +5,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.todoappstevdzasan.R
-import kotlinx.android.synthetic.main.activity_main.view.*
-import kotlinx.android.synthetic.main.fragment_list.view.*
+import kotlinx.android.synthetic.main.fragment_list.*
 
 class ListFragment : Fragment() {
 
@@ -26,11 +25,11 @@ class ListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        view.floatingActionButton.setOnClickListener{
+        floatingActionButton.setOnClickListener{
             findNavController().navigate(R.id.action_listFragment_to_addFragment)
         }
 
-        view.listLayout.setOnClickListener {
+        listLayout.setOnClickListener {
             findNavController().navigate(R.id.action_listFragment_to_updateFragment)
         }
 

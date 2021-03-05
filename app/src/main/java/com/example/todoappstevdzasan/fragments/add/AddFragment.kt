@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.todoappstevdzasan.R
+import com.example.todoappstevdzasan.ToDoViewModelFactory
 import com.example.todoappstevdzasan.data.ToDoDao
 import com.example.todoappstevdzasan.data.models.Priority
 import com.example.todoappstevdzasan.data.models.ToDoData
@@ -17,7 +18,9 @@ import kotlinx.android.synthetic.main.fragment_add.*
 
 class AddFragment : Fragment() {
 
-    private val mToDoViewModel:ToDoViewModel by viewModels()
+    private val mToDoViewModel by lazy {
+        ViewModelProvider(this,ToDoViewModelFactory(requireActivity().application)).get(ToDoViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
