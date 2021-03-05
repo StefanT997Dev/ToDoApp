@@ -1,4 +1,4 @@
-package com.example.todoappstevdzasan.data
+package com.example.todoappstevdzasan.data.models
 
 enum class Priority{
     HIGH,
