@@ -9,17 +9,23 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.todoappstevdzasan.R
+import com.example.todoappstevdzasan.SharedViewModelFactory
 import com.example.todoappstevdzasan.ToDoViewModelFactory
 import com.example.todoappstevdzasan.data.ToDoDao
 import com.example.todoappstevdzasan.data.models.Priority
 import com.example.todoappstevdzasan.data.models.ToDoData
 import com.example.todoappstevdzasan.data.viewmodel.ToDoViewModel
+import com.example.todoappstevdzasan.fragments.SharedViewModel
 import kotlinx.android.synthetic.main.fragment_add.*
 
 class AddFragment : Fragment() {
 
     private val mToDoViewModel by lazy {
         ViewModelProvider(this,ToDoViewModelFactory(requireActivity().application)).get(ToDoViewModel::class.java)
+    }
+
+    private val mSharedViewModel by lazy {
+        ViewModelProvider(this,SharedViewModelFactory(requireActivity().application)).get(SharedViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -33,6 +39,10 @@ class AddFragment : Fragment() {
         setHasOptionsMenu(true)
 
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        priorities_spinner.onItemSelectedListener=mSharedViewModel.listener
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -51,14 +61,14 @@ class AddFragment : Fragment() {
         val mPriority=priorities_spinner.selectedItem.toString()
         val mDescription=description_et.text.toString()
 
-        val validation = verifyDataFromUser(mTitle,mDescription)
+        val validation = mSharedViewModel.verifyDataFromUser(mTitle,mDescription)
 
         if(validation){
             // Insert Data to Database
             val newData= ToDoData(
                     0,
                     mTitle,
-                    parsePriority(mPriority),
+                    mSharedViewModel.parsePriority(mPriority),
                     mDescription
             )
 
@@ -68,20 +78,6 @@ class AddFragment : Fragment() {
             findNavController().navigate(R.id.action_addFragment_to_listFragment)
         }else{
             Toast.makeText(requireContext(),"Please fill out all fields",Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun verifyDataFromUser(title:String,description:String):Boolean{
-        return if(TextUtils.isEmpty(title) || TextUtils.isEmpty(description)){
-            false
-        }else!(title.isEmpty() || description.isEmpty())
-    }
-
-    private fun parsePriority(priority:String):Priority{
-        return when(priority){
-            "High Priority"-> {Priority.HIGH}
-            "Medium Priority"->{Priority.MEDIUM}
-            else -> {Priority.LOW}
         }
     }
 }
